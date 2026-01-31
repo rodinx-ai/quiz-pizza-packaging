@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест: Какая упаковка нужна вашей пиццерии? | ПриоТрейд</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            width: 100%;
+            background: white;
+            border-radius: 21px;
+            box-shadow: 0px 13px 55px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: #f0f0f0;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FF6B35 0%, #FFA500 100%);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .content {
+            padding: 55px;
+        }
+
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: clamp(28px, 6vw, 42px);
+            color: #2C3E50;
+            margin-bottom: 13px;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: clamp(24px, 5vw, 36px);
+            color: #2C3E50;
+            margin-bottom: 21px;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-size: clamp(16px, 2.5vw, 20px);
+            color: #7F8C8D;
+            margin-bottom: 34px;
+            line-height: 1.6;
+        }
+
+        .icon-big {
+            font-size: 80px;
+            text-align: center;
+            margin-bottom: 21px;
+        }
+
+        .options {
+            display: grid;
+            gap: 13px;
+            margin-bottom: 34px;
+        }
+
+        .option {
+            padding: 21px;
+            border: 2px solid #ecf0f1;
+            border-radius: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .option:hover {
+            border-color: #FF6B35;
+            background: #FFF5F0;
+            transform: translateX(8px);
+        }
+
+        .option.selected {
+            border-color: #FF6B35;
+            background: #FFF5F0;
+        }
+
+        .option-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+
+        .option-text {
+            flex: 1;
+        }
+
+        .option-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2C3E50;
+            margin-bottom: 4px;
+        }
+
+        .option-desc {
+            font-size: 14px;
+            color: #7F8C8D;
+        }
+
+        .input-wrapper {
+            margin-bottom: 21px;
+        }
+
+        .input-wrapper label {
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            color: #2C3E50;
+            margin-bottom: 8px;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 13px 21px;
+            border: 2px solid #ecf0f1;
+            border-radius: 13px;
+            font-size: 18px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .input-wrapper input:focus {
+            outline: none;
+            border-color: #FF6B35;
+        }
+
+        .hint {
+            font-size: 14px;
+            color: #7F8C8D;
+            margin-top: 8px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 13px;
+            margin-top: 34px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 18px 34px;
+            border: none;
+            border-radius: 13px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #FF6B35 0%, #FFA500 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0px 8px 21px rgba(255, 107, 53, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #ecf0f1;
+            color: #2C3E50;
+        }
+
+        .btn-secondary:hover {
+            background: #dfe6e9;
+        }
+
+        /* РЕЗУЛЬТАТ */
+        .result-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 34px;
+            border-radius: 13px;
+            margin-bottom: 21px;
+            text-align: center;
+        }
+
+        .result-card h3 {
+            font-size: 28px;
+            margin-bottom: 13px;
+        }
+
+        .result-card .big-number {
+            font-size: 56px;
+            font-weight: 900;
+            margin: 21px 0;
+        }
+
+        .result-card p {
+            font-size: 18px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .roi-breakdown {
+            background: #f8f9fa;
+            padding: 21px;
+            border-radius: 13px;
+            margin-bottom: 21px;
+        }
+
+        .roi-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 13px 0;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .roi-item:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            font-size: 20px;
+            color: #2ECC71;
+        }
+
+        .roi-label {
+            color: #2C3E50;
+        }
+
+        .roi-value {
+            font-weight: 700;
+            color: #FF6B35;
+        }
+
+        .recommendation {
+            background: #FFF5F0;
+            border-left: 4px solid #FF6B35;
+            padding: 21px;
+            border-radius: 8px;
+            margin-bottom: 21px;
+        }
+
+        .recommendation h4 {
+            color: #FF6B35;
+            font-size: 20px;
+            margin-bottom: 13px;
+        }
+
+        .recommendation ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .recommendation li {
+            padding: 8px 0;
+            padding-left: 28px;
+            position: relative;
+            color: #2C3E50;
+        }
+
+        .recommendation li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #2ECC71;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .cta-buttons {
+            display: grid;
+            gap: 13px;
+            margin-top: 34px;
+        }
+
+        .cta-btn {
+            padding: 21px 34px;
+            border-radius: 13px;
+            text-decoration: none;
+            text-align: center;
+            font-weight: 700;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        .cta-primary {
+            background: linear-gradient(135deg, #FF6B35 0%, #FFA500 100%);
+            color: white;
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0px 8px 21px rgba(255, 107, 53, 0.4);
+        }
+
+        .cta-secondary {
+            background: white;
+            color: #FF6B35;
+            border: 2px solid #FF6B35;
+        }
+
+        .cta-secondary:hover {
+            background: #FFF5F0;
+        }
+
+        .form-group {
+            margin-bottom: 21px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            color: #2C3E50;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 13px 21px;
+            border: 2px solid #ecf0f1;
+            border-radius: 13px;
+            font-size: 16px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #FF6B35;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 34px 21px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            .result-card .big-number {
+                font-size: 42px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar"></div>
+        </div>
+
+        <div class="content">
+
+            <!-- ШАГ 0: ПРИВЕТСТВИЕ -->
+            <div class="step active" id="step0">
+                <div class="icon-big">🍕</div>
+                <h1>Узнайте, какая упаковка увеличит ваши продажи</h1>
+                <p class="subtitle">Ответьте на 5 вопросов — мы рассчитаем потенциальную прибыль от брендированной упаковки и подберём оптимальное решение для вашей пиццерии</p>
+                <button class="btn btn-primary" onclick="nextStep()">Начать тест →</button>
+            </div>
+
+            <!-- ШАГ 1: ЗАКАЗОВ В ДЕНЬ -->
+            <div class="step" id="step1">
+                <h2>📊 Сколько заказов у вас в день?</h2>
+                <p class="subtitle">Это поможет рассчитать экономический эффект от упаковки</p>
+
+                <div class="options">
+                    <div class="option" onclick="selectOption(1, 'orders_low')">
+                        <div class="option-icon">🌱</div>
+                        <div class="option-text">
+                            <div class="option-title">До 20 заказов</div>
+                            <div class="option-desc">Начинающая пиццерия</div>
+                        </div>
+                    </div>
+
+                    <div class="option" onclick="selectOption(1, 'orders_medium')">
+                        <div class="option-icon">📈</div>
+                        <div class="option-text">
+                            <div class="option-title">20-50 заказов</div>
+                            <div class="option-desc">Растущий бизнес</div>
+                        </div>
+                    </div>
+
+                    <div class="option" onclick="selectOption(1, 'orders_high')">
+                        <div class="option-icon">🚀</div>
+                        <div class="option-text">
+                            <div class="option-title">50-100 заказов</div>
+                            <div class="option-desc">Стабильная пиццерия</div>
+                        </div>
+                    </div>
+
+                    <div class="option" onclick="selectOption(1, 'orders_very_high')">
+                        <div class="option-icon">🏆</div>
+                        <div class="option-text">
+                            <div class="option-title">Более 100 заказов</div>
+                            <div class="option-desc">Сеть или крупная точка</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <button class="btn btn-secondary" onclick="prevStep()">← Назад</button>
+                    <button class="btn btn-primary" id="btn1" onclick="nextStep()" disabled>Далее →</button>
+                </div>
+            </div>
+
+            <!-- ШАГ 2: СРЕДНИЙ ЧЕК -->
+            <div class="step" id="step2">
+                <h2>💰 Какой средний чек заказа?</h2>
+                <p class="subtitle">Это важно для расчёта ROI (возврата инвестиций)</p>
+
+                <div class="options">
+                    <div class="option" onclick="selectOption(2, 'check_low')">
+                        <div class="option-icon">💵</div>
+                        <div class="option-text">
+                            <div class="option-title">До 500 ₽</div>
+                            <div class="option-desc">Эконом-сегмент</div>
+                        </div>
+                    </div>
+
+                    <div class="option" onclick="selectOption(2, 'check_medium')">
+                        <div class="option-icon">💵💵</div>
+                        <div class="option-text">
+                            <div class="option-title">500-1000 ₽</div>
+                            <div class="option-desc">Средний сегмент</div>
+                        </div>
+                    </div>
+
+                    <div class="option" onclick="selectOption(2, 'check_high')">
+                        <div class="option-icon">💵💵💵</div>
+                        <div class="option-text">
+                            <div class="option-title">1000-1500 ₽</div>
+                            <div class="option-desc">Премиум-сегмент</div>
+                        </div>
+                    </div>
+
+                    <div class="option" onclick="selectOption(2, 'check_premium')">
+                        <div class="option-icon">💎</div>
+                        <div class="option-text">
+                            <div class="option-title">Более 1500 ₽</div>
+                            <div class="option-desc">VIP-сегмент</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <button class="btn btn-secondary" onclick="prevStep()">← Назад</button>
+                    <button class="btn btn-primary" id="btn2" onclick="nextStep()" disabled>Далее →</button>
+                </div>
+            </div>
+
+            <!-- ШАГ 3: ПРОБЛЕМЫ -->
+            <div class="step" id="step3">
+                <h2>🤔 Какая главная проблема сейчас?</h2>
+                <p class="subtitle">Это поможет подобрать оптимальное решение</p>
+
+                <div class="options">
+                    <div class="option" onclick="selectOption(3, 'problem_recognition')">
+                        <div class="option-icon">👀</div>
+                        <div class="option-text">
+                            <div class="option-title">Низкая узнаваемость</div>
+                            <div class="option-desc">Клиенты не запоминают бренд</div>
+                        </div>
+                    </div>
+
+                    <div class="option" onclick="selectOption(3, 'problem_repeat')">
+                        <div class="option-icon">🔄</div>
+                        <div class="option-text">
+                            <div class="option-title">Мало повторных заказов</div>
+                            <div class="option-desc">Клиенты не возвращаются</div>
+                        </div>
+                    </div>
+
+                    <div class="option" onclick="selectOption(3, 'problem_competitors')">
+                        <div class="option-icon">⚔️</div>
+                        <div class="option-text">
+                            <div class="option-title">Сливаемся с конкурентами</div>
+                            <div class="option-desc">Нет выделения на фоне других</div>
+                        </div>
+                    </div>
+
+                    <div class="option" onclick="selectOption(3, 'problem_packaging')">
+                        <div class="option-icon">📦</div>
+                        <div class="option-text">
+                            <div class="option-title">Некачественная упаковка</div>
+                            <div class="option-desc">Коробки без логотипа или плохие</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <button class="btn btn-secondary" onclick="prevStep()">← Назад</button>
+                    <button class="btn btn-primary" id="btn3" onclick="nextStep()" disabled>Далее →</button>
+                </div>
+            </div>
+
+            <!-- ШАГ 4: РАЗМЕРЫ ПИЦЦЫ -->
+            <div class="step" id="step4">
+                <h2>📏 Какие размеры пиццы продаёте?</h2>
+                <p class="subtitle">Можно выбрать несколько вариантов</p>
+
+                <div class="options">
+                    <div class="option" onclick="toggleMultiOption(4, 'size_25')">
+                        <div class="option-icon">🍕</div>
+                        <div class="option-text">
+                            <div class="option-title">25 см (маленькая)</div>
+                        </div>
+                    </div>
+
+                    <div class="option" onclick="toggleMultiOption(4, 'size_30')">
+                        <div class="option-icon">🍕</div>
+                        <div class="option-text">
+                            <div class="option-title">30 см (средняя)</div>
+                        </div>
+                    </div>
+
+                    <div class="option" onclick="toggleMultiOption(4, 'size_33')">
+                        <div class="option-icon">🍕</div>
+                        <div class="option-text">
+                            <div class="option-title">33 см (большая)</div>
+                        </div>
+                    </div>
+
+                    <div class="option" onclick="toggleMultiOption(4, 'size_40')">
+                        <div class="option-icon">🍕</div>
+                        <div class="option-text">
+                            <div class="option-title">40 см (XL)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <button class="btn btn-secondary" onclick="prevStep()">← Назад</button>
+                    <button class="btn btn-primary" id="btn4" onclick="nextStep()" disabled>Далее →</button>
+                </div>
+            </div>
+
+            <!-- ШАГ 5: БЮДЖЕТ -->
+            <div class="step" id="step5">
+                <h2>💵 Какой бюджет на упаковку?</h2>
+                <p class="subtitle">Рекомендуем начинать с минимального тиража 1000 штук</p>
+
+                <div class="options">
+                    <div class="option" onclick="selectOption(5, 'budget_low')">
+                        <div class="option-icon">💰</div>
+                        <div class="option-text">
+                            <div class="option-title">До 20 000 ₽</div>
+                            <div class="option-desc">Тираж 500-1000 шт (один размер)</div>
+                        </div>
+                    </div>
+
+                    <div class="option" onclick="selectOption(5, 'budget_medium')">
+                        <div class="option-icon">💰💰</div>
+                        <div class="option-text">
+                            <div class="option-title">20 000 - 50 000 ₽</div>
+                            <div class="option-desc">Тираж 1000-3000 шт (несколько размеров)</div>
+                        </div>
+                    </div>
+
+                    <div class="option" onclick="selectOption(5, 'budget_high')">
+                        <div class="option-icon">💰💰💰</div>
+                        <div class="option-text">
+                            <div class="option-title">50 000 - 100 000 ₽</div>
+                            <div class="option-desc">Тираж 3000-6000 шт (все размеры)</div>
+                        </div>
+                    </div>
+
+                    <div class="option" onclick="selectOption(5, 'budget_premium')">
+                        <div class="option-icon">💎</div>
+                        <div class="option-text">
+                            <div class="option-title">Более 100 000 ₽</div>
+                            <div class="option-desc">Большие объёмы + допы (пакеты, салфетки)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <button class="btn btn-secondary" onclick="prevStep()">← Назад</button>
+                    <button class="btn btn-primary" id="btn5" onclick="calculateResult()">Узнать результат →</button>
+                </div>
+            </div>
+
+            <!-- ШАГ 6: РЕЗУЛЬТАТ -->
+            <div class="step" id="step6">
+                <div class="icon-big">🎉</div>
+                <h2>Ваш персональный результат</h2>
+
+                <div class="result-card">
+                    <h3>Потенциальная прибыль за год</h3>
+                    <div class="big-number" id="profitValue">+450 000 ₽</div>
+                    <p>От повторных заказов и узнаваемости бренда</p>
+                </div>
+
+                <div class="roi-breakdown">
+                    <div class="roi-item">
+                        <span class="roi-label">Ваших заказов в месяц:</span>
+                        <span class="roi-value" id="ordersMonth">900</span>
+                    </div>
+                    <div class="roi-item">
+                        <span class="roi-label">Рост повторных заказов (+15%):</span>
+                        <span class="roi-value" id="repeatOrders">135</span>
+                    </div>
+                    <div class="roi-item">
+                        <span class="roi-label">Дополнительная выручка в месяц:</span>
+                        <span class="roi-value" id="additionalRevenue">+40 500 ₽</span>
+                    </div>
+                    <div class="roi-item">
+                        <span class="roi-label">Окупаемость упаковки:</span>
+                        <span id="paybackPeriod">1-2 месяца</span>
+                    </div>
+                </div>
+
+                <div class="recommendation">
+                    <h4>Наша рекомендация для вас</h4>
+                    <p style="margin-bottom: 13px; color: #2C3E50;" id="recommendationText">
+                        Базовый пакет "Старт"
+                    </p>
+                    <ul id="recommendationList">
+                        <li>Дизайн упаковки с вашим логотипом</li>
+                        <li>Печать тиража 1000 штук (30 см)</li>
+                        <li>Материал: белый картон с ламинацией</li>
+                        <li>Срок производства: 10-14 дней</li>
+                    </ul>
+                    <p style="margin-top: 13px; font-weight: 700; font-size: 24px; color: #FF6B35;" id="recommendedPrice">
+                        Стоимость: 25 000 ₽
+                    </p>
+                </div>
+
+                <div class="cta-buttons">
+                    <a href="https://rodinx-ai.github.io/calculator-packages/" class="cta-btn cta-primary" target="_blank">
+                        🧮 Рассчитать точную стоимость в калькуляторе
+                    </a>
+
+                    <a href="https://rodinx-ai.github.io/presentation-pizza-packaging/" class="cta-btn cta-secondary" target="_blank">
+                        📊 Посмотреть презентацию с примерами
+                    </a>
+
+                    <button class="cta-btn cta-primary" onclick="showLeadForm()">
+                        📩 Получить консультацию менеджера
+                    </button>
+                </div>
+            </div>
+
+            <!-- ШАГ 7: ФОРМА ЗАЯВКИ -->
+            <div class="step" id="step7">
+                <div class="icon-big">📩</div>
+                <h2>Оставьте контакты</h2>
+                <p class="subtitle">Мы свяжемся с вами в течение 1 часа и подготовим персональное предложение</p>
+
+                <form onsubmit="submitLead(event)">
+                    <div class="form-group">
+                        <label>Ваше имя</label>
+                        <input type="text" id="leadName" placeholder="Иван" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Телефон или Email</label>
+                        <input type="text" id="leadContact" placeholder="+7 (900) 123-45-67" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Название пиццерии (необязательно)</label>
+                        <input type="text" id="leadCompany" placeholder="Pizzeria Bella">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        Отправить заявку →
+                    </button>
+                </form>
+
+                <button class="btn btn-secondary" onclick="backToResult()" style="width: 100%; margin-top: 13px;">
+                    ← Вернуться к результатам
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 0;
+        const totalSteps = 6;
+        let answers = {};
+        let selectedMulti = [];
+
+        function updateProgress() {
+            const progress = (currentStep / totalSteps) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        function showStep(n) {
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.getElementById('step' + n).classList.add('active');
+            currentStep = n;
+            updateProgress();
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                showStep(currentStep + 1);
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 0) {
+                showStep(currentStep - 1);
+            }
+        }
+
+        function selectOption(step, value) {
+            // Убираем выделение со всех опций текущего шага
+            const stepEl = document.getElementById('step' + step);
+            stepEl.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+
+            // Выделяем выбранную опцию
+            event.currentTarget.classList.add('selected');
+
+            // Сохраняем ответ
+            answers['step' + step] = value;
+
+            // Активируем кнопку "Далее"
+            document.getElementById('btn' + step).disabled = false;
+        }
+
+        function toggleMultiOption(step, value) {
+            const option = event.currentTarget;
+
+            if (selectedMulti.includes(value)) {
+                selectedMulti = selectedMulti.filter(v => v !== value);
+                option.classList.remove('selected');
+            } else {
+                selectedMulti.push(value);
+                option.classList.add('selected');
+            }
+
+            answers['step' + step] = selectedMulti;
+
+            // Активируем кнопку если выбрано хотя бы что-то
+            document.getElementById('btn' + step).disabled = selectedMulti.length === 0;
+        }
+
+        function calculateResult() {
+            // РАСЧЁТ МЕТРИК
+
+            // Количество заказов
+            let ordersPerDay = 0;
+            if (answers.step1 === 'orders_low') ordersPerDay = 15;
+            if (answers.step1 === 'orders_medium') ordersPerDay = 35;
+            if (answers.step1 === 'orders_high') ordersPerDay = 75;
+            if (answers.step1 === 'orders_very_high') ordersPerDay = 120;
+
+            const ordersPerMonth = ordersPerDay * 30;
+
+            // Средний чек
+            let avgCheck = 0;
+            if (answers.step2 === 'check_low') avgCheck = 400;
+            if (answers.step2 === 'check_medium') avgCheck = 750;
+            if (answers.step2 === 'check_high') avgCheck = 1250;
+            if (answers.step2 === 'check_premium') avgCheck = 2000;
+
+            // Рост повторных заказов (консервативная оценка 15%)
+            const repeatOrdersGrowth = ordersPerMonth * 0.15;
+
+            // Дополнительная выручка в месяц
+            const additionalRevenueMonth = Math.round(repeatOrdersGrowth * avgCheck);
+
+            // Прибыль за год (с учётом маржи 60%)
+            const profitYear = Math.round(additionalRevenueMonth * 12 * 0.6);
+
+            // Окупаемость
+            let budget = 0;
+            if (answers.step5 === 'budget_low') budget = 15000;
+            if (answers.step5 === 'budget_medium') budget = 35000;
+            if (answers.step5 === 'budget_high') budget = 75000;
+            if (answers.step5 === 'budget_premium') budget = 150000;
+
+            const paybackMonths = Math.ceil(budget / additionalRevenueMonth);
+
+            // ЗАПОЛНЯЕМ РЕЗУЛЬТАТ
+            document.getElementById('profitValue').textContent = '+' + profitYear.toLocaleString('ru-RU') + ' ₽';
+            document.getElementById('ordersMonth').textContent = ordersPerMonth;
+            document.getElementById('repeatOrders').textContent = Math.round(repeatOrdersGrowth);
+            document.getElementById('additionalRevenue').textContent = '+' + additionalRevenueMonth.toLocaleString('ru-RU') + ' ₽';
+            document.getElementById('paybackPeriod').textContent = paybackMonths <= 1 ? 'Менее 1 месяца' : paybackMonths + ' месяца';
+
+            // РЕКОМЕНДАЦИЯ
+            let recommendation = '';
+            let recommendationList = [];
+            let recommendedPrice = 0;
+
+            if (answers.step5 === 'budget_low') {
+                recommendation = 'Базовый пакет "Старт"';
+                recommendationList = [
+                    'Дизайн упаковки с вашим логотипом',
+                    'Печать тиража 1000 штук (один размер)',
+                    'Материал: белый картон',
+                    'Срок производства: 10-14 дней'
+                ];
+                recommendedPrice = 18000;
+            } else if (answers.step5 === 'budget_medium') {
+                recommendation = 'Стандартный пакет "Рост"';
+                recommendationList = [
+                    'Дизайн упаковки с вашим логотипом',
+                    'Печать тиража 2000-3000 штук (2-3 размера)',
+                    'Материал: белый картон с ламинацией',
+                    'Дополнительно: брендированные пакеты',
+                    'Срок производства: 10-14 дней'
+                ];
+                recommendedPrice = 45000;
+            } else if (answers.step5 === 'budget_high') {
+                recommendation = 'Премиум пакет "Профи"';
+                recommendationList = [
+                    'Дизайн упаковки + мини-брендбук',
+                    'Печать тиража 5000+ штук (все размеры)',
+                    'Материал: премиум картон с ламинацией',
+                    'Дополнительно: пакеты, салфетки, наклейки',
+                    'Фирменные визитки и листовки',
+                    'Срок производства: 14-21 день'
+                ];
+                recommendedPrice = 85000;
+            } else {
+                recommendation = 'VIP пакет "Сеть"';
+                recommendationList = [
+                    'Полный фирменный стиль + брендбук',
+                    'Печать тиража 10000+ штук (все размеры)',
+                    'Материал: премиум картон с эффектами',
+                    'Вся полиграфия: пакеты, салфетки, меню, листовки',
+                    'Дизайн вывески и баннеров',
+                    'Индивидуальный менеджер проекта',
+                    'Срок производства: 21-30 дней'
+                ];
+                recommendedPrice = 180000;
+            }
+
+            document.getElementById('recommendationText').textContent = recommendation;
+
+            const listHTML = recommendationList.map(item => `<li>${item}</li>`).join('');
+            document.getElementById('recommendationList').innerHTML = listHTML;
+
+            document.getElementById('recommendedPrice').textContent = 'Стоимость: ' + recommendedPrice.toLocaleString('ru-RU') + ' ₽';
+
+            // Показываем результат
+            showStep(6);
+        }
+
+        function showLeadForm() {
+            showStep(7);
+        }
+
+        function backToResult() {
+            showStep(6);
+        }
+
+        function submitLead(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('leadName').value;
+            const contact = document.getElementById('leadContact').value;
+            const company = document.getElementById('leadCompany').value;
+
+            // ЗДЕСЬ ИНТЕГРАЦИЯ С BACKEND/TELEGRAM
+            // Пример для Telegram:
+            /*
+            const botToken = 'ВАШ_ТОКЕН';
+            const chatId = 'ВАШ_CHAT_ID';
+            const message = `🍕 Новая заявка из квиза!
+
+Имя: ${name}
+Контакт: ${contact}
+Компания: ${company}
+
+Ответы:
+${JSON.stringify(answers, null, 2)}`;
+
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({chat_id: chatId, text: message})
+            });
+            */
+
+            alert(`Спасибо, ${name}! Ваша заявка принята.
+
+Мы свяжемся с вами в течение 1 часа и подготовим персональное предложение.`);
+
+            // Возвращаемся к результату
+            showStep(6);
+        }
+
+        // Инициализация
+        updateProgress();
+    </script>
+
+</body>
+</html>
